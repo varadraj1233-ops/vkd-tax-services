@@ -1,0 +1,21 @@
+{
+  "overview": "VKD Tax Services is a professional multi-role tax services platform for managing Income Tax Return and eTDS Return filings. It features role-based dashboards for owners, staff, and clients — with a service request queue, PNG proof upload with AI verification, and company information management.",
+  "features": [
+    "Multi-page layout with separate pages for Home, Services, About, Contact, Owner Panel, and Client Portal",
+    "Role-based dashboards for owner, staff, and client accounts",
+    "Service request queue — clients submit requests, staff pick them up from the queue",
+    "Staff uploads PNG proof of completed work; AI automatically verifies the proof before client can view it",
+    "Owner panel to create and manage staff accounts, view all requests, and update company address",
+    "Contact page with WhatsApp logo, phone number, and company address in Nanded, Maharashtra"
+  ],
+  "category": "productivity",
+  "tags": [
+    "tax-services",
+    "multi-role",
+    "request-management",
+    "file-upload",
+    "ai-verification",
+    "india"
+  ],
+  "last_updated": "2026-04-21T11:13:14.492Z"
+}

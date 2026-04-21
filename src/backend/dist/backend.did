@@ -1,0 +1,90 @@
+type UserProfileView = 
+ record {
+   displayName: text;
+   email: text;
+   id: UserId;
+   updatedAt: Timestamp;
+ };
+type UserId = principal;
+type Timestamp = int;
+type StaffAccountView = 
+ record {
+   createdAt: Timestamp;
+   email: text;
+   isActive: bool;
+   name: text;
+   principalId: UserId;
+ };
+type ServiceType = 
+ variant {
+   etdsReturn;
+   incomeTaxReturn;
+ };
+type ServiceRequestView = 
+ record {
+   aiRejectionReason: opt text;
+   clientId: UserId;
+   createdAt: Timestamp;
+   description: text;
+   id: nat;
+   proofStorageKey: opt text;
+   serviceType: ServiceType;
+   staffId: opt UserId;
+   status: RequestStatus;
+   updatedAt: Timestamp;
+ };
+type Role = 
+ variant {
+   client;
+   owner;
+   staff;
+ };
+type RequestStatus = 
+ variant {
+   aiRejected;
+   awaitingAiApproval;
+   completed;
+   inProgress;
+   pending;
+ };
+type ContactInquiry = 
+ record {
+   createdAt: Timestamp;
+   email: text;
+   id: nat;
+   message: text;
+   name: text;
+   subject: text;
+ };
+type CompanySettingsView = 
+ record {
+   address: text;
+   updatedAt: Timestamp;
+ };
+service : {
+  assignRole: (target: UserId, role: Role) -> ();
+  createStaff: (principalId: UserId, name: text, email: text) ->
+   (StaffAccountView);
+  deactivateStaff: (principalId: UserId) -> (opt StaffAccountView);
+  getCompanySettings: () -> (CompanySettingsView) query;
+  getContactInquiry: (id: nat) -> (opt ContactInquiry) query;
+  getMyProfile: () -> (opt UserProfileView) query;
+  getMyRequests: () -> (vec ServiceRequestView) query;
+  getMyRole: () -> (Role) query;
+  getRequestById: (requestId: nat) -> (opt ServiceRequestView) query;
+  getRequestQueue: () -> (vec ServiceRequestView) query;
+  listAllRequests: () -> (vec ServiceRequestView) query;
+  listContactInquiries: () -> (vec ContactInquiry) query;
+  listStaff: () -> (vec StaffAccountView) query;
+  pickRequest: (requestId: nat) -> (opt ServiceRequestView);
+  runAiProofCheck: (requestId: nat) -> (opt ServiceRequestView);
+  submitContactInquiry: (name: text, email: text, subject: text, message:
+   text) -> (ContactInquiry);
+  submitRequest: (serviceType: ServiceType, description: text) ->
+   (ServiceRequestView);
+  triggerAiCheck: (requestId: nat, approved: bool, rejectionReason:
+   opt text) -> (opt ServiceRequestView);
+  updateCompanyAddress: (address: text) -> (CompanySettingsView);
+  uploadProof: (requestId: nat, storageKey: text) -> (opt ServiceRequestView);
+  upsertMyProfile: (displayName: text, email: text) -> (UserProfileView);
+}

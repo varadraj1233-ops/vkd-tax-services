@@ -1,0 +1,153 @@
+// Version: 3.0.0
+type ContactInquiry__762096662 =
+  {
+    createdAt : Timestamp__301639476;
+    email : Text;
+    id : Nat;
+    message : Text;
+    name : Text;
+    subject : Text
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type HttpHeader__482011737 = {name : Text; value : Text};
+type HttpRequestArgs__256037742 =
+  {
+    body : ?Blob;
+    headers : [HttpHeader__482011737];
+    max_response_bytes : ?Nat64;
+    method : {#get; #head; #post};
+    transform :
+      ?{
+         context : Blob;
+         function :
+           shared query {context : Blob; response : HttpResponse__711981559} ->
+             async HttpResponse__711981559
+       };
+    url : Text
+  };
+type HttpResponse__711981559 =
+  {body : Blob; headers : [HttpHeader__482011737]; status : Nat};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type List__415060402<T> = List__790383201<T>;
+type List__790383201<T> =
+  {
+    var blockIndex : Nat__490723111;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__490723111
+  };
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type OldUserProfile__416069324 =
+  {
+    var displayName : Text;
+    var email : Text;
+    id : UserId__2049225;
+    updatedAt : Timestamp__817121181
+  };
+type RequestStatus__211161413 =
+  {#aiRejected; #awaitingAiApproval; #completed; #inProgress; #pending};
+type Role__300349085 = {#client; #owner; #staff};
+type ServiceRequest__1006041828 =
+  {
+    var aiRejectionReason : ?Text;
+    clientId : UserId__158757552;
+    createdAt : Timestamp__301639476;
+    description : Text;
+    id : Nat;
+    var proofStorageKey : ?Text;
+    serviceType : ServiceType__681164043;
+    var staffId : ?UserId__158757552;
+    var status : RequestStatus__211161413;
+    var updatedAt : Timestamp__301639476
+  };
+type ServiceType__681164043 = {#etdsReturn; #incomeTaxReturn};
+type StaffAccount__433649169 =
+  {
+    createdAt : Timestamp__301639476;
+    var email : Text;
+    var isActive : Bool;
+    var name : Text;
+    principalId : UserId__158757552
+  };
+type State__340920162 =
+  {inquiries : List__415060402<ContactInquiry__762096662>; var nextId : Nat};
+type Timestamp__301639476 = Int;
+type Timestamp__817121181 = Int;
+type UserId__158757552 = Principal;
+type UserId__2049225 = Principal;
+type UserProfile__446616884 =
+  {
+    var displayName : Text;
+    var email : Text;
+    id : UserId__158757552;
+    var updatedAt : Timestamp__301639476
+  };
+actor ({
+  in contactState : State__340920162;
+  stable ic :
+    actor {
+      http_request :
+        shared HttpRequestArgs__256037742 -> async HttpResponse__711981559
+    };
+  in profileState :
+    Map__605269027<UserId__2049225, OldUserProfile__416069324>;
+  stable requestState :
+    {
+      var nextId : Nat;
+      requests : List__415060402<ServiceRequest__1006041828>
+    };
+  stable roles :
+    {
+      var root : Node__46230540<UserId__158757552, Role__300349085>;
+      var size : Nat__490723111
+    };
+  stable settingsState :
+    {var address : Text; var updatedAt : Timestamp__301639476};
+  stable staffState :
+    {
+      var root : Node__46230540<UserId__158757552, StaffAccount__433649169>;
+      var size : Nat__490723111
+    }
+}, {
+  stable contactState :
+    {
+      inquiries : List__415060402<ContactInquiry__762096662>;
+      var nextId : Nat
+    };
+  stable ic :
+    actor {
+      http_request :
+        shared HttpRequestArgs__256037742 -> async HttpResponse__711981559
+    };
+  stable profileState :
+    {
+      var root : Node__46230540<UserId__158757552, UserProfile__446616884>;
+      var size : Nat__490723111
+    };
+  stable requestState :
+    {
+      var nextId : Nat;
+      requests : List__415060402<ServiceRequest__1006041828>
+    };
+  stable roles :
+    {
+      var root : Node__46230540<UserId__158757552, Role__300349085>;
+      var size : Nat__490723111
+    };
+  stable settingsState :
+    {var address : Text; var updatedAt : Timestamp__301639476};
+  stable staffState :
+    {
+      var root : Node__46230540<UserId__158757552, StaffAccount__433649169>;
+      var size : Nat__490723111
+    }
+}) ;
